@@ -10,7 +10,6 @@ function getData(start, end) {
     fetch(URL + i)
       .then((response) => response.json())
       .then((data) => pokemonMonster(data));
-    console.log(i);
   }
 }
 
@@ -57,8 +56,8 @@ buttonsHeader.forEach((button) =>
     const buttonId = event.currentTarget.id;
 
     pokemonList.innerHTML = "";
-
-    for (let i = 1; i <= 151; i++) {
+    start = 1;
+    for (let i = start; i <= 151; i++) {
       fetch(URL + i)
         .then((response) => response.json())
         .then((data) => {
@@ -78,6 +77,10 @@ buttonsHeader.forEach((button) =>
 buttonShowMore.addEventListener("click", () => {
   start += 100;
   getData(start, start + 100);
+  if (start + 100 > numPokemon) {
+    buttonShowMore.disabled = true;
+    buttonShowMore.textContent = "You have reached the end of the list";
+  }
 });
 
 getData(1, 101);
