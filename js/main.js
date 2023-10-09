@@ -1,11 +1,14 @@
 const pokemonList = document.querySelector("#pokemonList");
 const buttonsHeader = document.querySelectorAll(".btn-header");
 const URL = "https://pokeapi.co/api/v2/pokemon/";
+const numPokemon = 1016;
 
-for (let i = 1; i <= 151; i++) {
-  fetch(URL + i)
-    .then((response) => response.json())
-    .then((data) => pokemonMonster(data));
+function getData(start, end) {
+  for (let i = start; i <= end && i <= numPokemon; i++) {
+    fetch(URL + i)
+      .then((response) => response.json())
+      .then((data) => pokemonMonster(data));
+  }
 }
 
 function pokemonMonster(poke) {
@@ -68,3 +71,5 @@ buttonsHeader.forEach((button) =>
     }
   })
 );
+
+getData(1, 100);

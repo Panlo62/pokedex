@@ -88,13 +88,18 @@ footer span,
 .author {
   display: flex;
   max-width: 1000px;
-  gap: 15rem;
   align-items: center;
+  width: -webkit-fill-available;
+}
+
+.author .logo-container,
+.author p {
+  flex: 0.5;
 }
 
 footer img {
   width: 100%;
-  max-width: 2rem;
+  max-width: 30px;
 }
 
 .nav-list {
@@ -104,7 +109,8 @@ footer img {
   gap: 0.5rem;
 }
 
-.btn-header {
+.btn-header,
+.btn-more {
   background-color: var(--clr-gray);
   padding: 0.5rem;
   border-radius: 100vmax;
@@ -115,13 +121,17 @@ footer img {
   transition: 0.2s;
 }
 
-.btn-header:hover {
+.btn-header:hover,
+.btn-more:hover {
   transform: scale(1.1);
   box-shadow: 0 0 2rem rgba(0, 0, 0, 0.25);
 }
 
 main {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   padding: 2rem;
   max-width: 1000px;
   margin: 0 auto;
