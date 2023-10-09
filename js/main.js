@@ -1,13 +1,16 @@
 const pokemonList = document.querySelector("#pokemonList");
 const buttonsHeader = document.querySelectorAll(".btn-header");
+const buttonShowMore = document.querySelector(".btn-more");
 const URL = "https://pokeapi.co/api/v2/pokemon/";
 const numPokemon = 1016;
+let start = 1;
 
 function getData(start, end) {
-  for (let i = start; i <= end && i <= numPokemon; i++) {
+  for (let i = start; i < end && i <= numPokemon; i++) {
     fetch(URL + i)
       .then((response) => response.json())
       .then((data) => pokemonMonster(data));
+    console.log(i);
   }
 }
 
@@ -72,4 +75,9 @@ buttonsHeader.forEach((button) =>
   })
 );
 
-getData(1, 100);
+buttonShowMore.addEventListener("click", () => {
+  start += 100;
+  getData(start, start + 100);
+});
+
+getData(1, 101);
