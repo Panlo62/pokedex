@@ -46,6 +46,8 @@ button {
 body {
   min-height: 100vh;
   background-color: var(--clr-gray);
+  display: flex;
+  flex-direction: column;
 }
 
 header {
@@ -119,6 +121,7 @@ footer img {
 }
 
 main {
+  flex: 1;
   padding: 2rem;
   max-width: 1000px;
   margin: 0 auto;
