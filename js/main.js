@@ -1,16 +1,19 @@
 const pokemonList = document.querySelector("#pokemonList");
 const buttonsHeader = document.querySelectorAll(".btn-header");
 const buttonShowMore = document.querySelector(".btn-more");
+const tags = document.querySelector("#tags");
 const URL = "https://pokeapi.co/api/v2/pokemon/";
 const numPokemon = 1016;
 let start = 1;
+let tagList = [];
 
-function getData(start, end) {
-  for (let i = start; i < end && i <= numPokemon; i++) {
+function getData(initial, final) {
+  for (let i = initial; i < final && i <= numPokemon; i++) {
     fetch(URL + i)
       .then((response) => response.json())
       .then((data) => pokemonMonster(data));
   }
+  start = final;
 }
 
 function pokemonMonster(poke) {
@@ -54,10 +57,14 @@ function pokemonMonster(poke) {
 buttonsHeader.forEach((button) =>
   button.addEventListener("click", (event) => {
     const buttonId = event.currentTarget.id;
+    if (tagList.length >= 2) {
+      alert("You can only choose two tags at a time.");
+      return;
+    }
 
+    tagList.push(buttonId);
     pokemonList.innerHTML = "";
-    start = 1;
-    for (let i = start; i <= 151; i++) {
+    for (let i = 1; i < start && i <= numPokemon; i++) {
       fetch(URL + i)
         .then((response) => response.json())
         .then((data) => {
@@ -75,7 +82,6 @@ buttonsHeader.forEach((button) =>
 );
 
 buttonShowMore.addEventListener("click", () => {
-  start += 100;
   getData(start, start + 100);
   if (start + 100 > numPokemon) {
     buttonShowMore.disabled = true;
@@ -83,4 +89,4 @@ buttonShowMore.addEventListener("click", () => {
   }
 });
 
-getData(1, 101);
+getData(start, start + 100);
