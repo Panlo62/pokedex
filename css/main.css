@@ -65,6 +65,15 @@ header {
   margin: 0 auto;
 }
 
+#tags {
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  padding-inline: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
 footer {
   padding-block: 1rem;
   box-shadow: 0 0 2rem -1rem rgba(0, 0, 0, 0.5);

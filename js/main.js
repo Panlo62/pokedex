@@ -1,11 +1,12 @@
 const pokemonList = document.querySelector("#pokemonList");
 const buttonsHeader = document.querySelectorAll(".btn-header");
 const buttonShowMore = document.querySelector(".btn-more");
-const tags = document.querySelector("#tags");
 const URL = "https://pokeapi.co/api/v2/pokemon/";
 const numPokemon = 1016;
-let start = 1;
+let cancelButtons = [];
+let pokemonCards = [];
 let tagList = [];
+let start = 1;
 
 function getData(initial, final) {
   for (let i = initial; i < final && i <= numPokemon; i++) {
@@ -17,7 +18,6 @@ function getData(initial, final) {
 }
 
 function pokemonMonster(poke) {
-  console.log(poke);
   let types = poke.types.map(
     (type) => `<p class="${type.type.name} type">${type.type.name}</p>`
   );
@@ -52,31 +52,60 @@ function pokemonMonster(poke) {
         </div>
     `;
   pokemonList.append(div);
+
+  if (tagList.length !== 0) noneDisplay(div);
+}
+
+function noneDisplay(pokemon) {
+  const types = pokemon.querySelector(".pokemon-types").innerHTML;
+
+  if (tagList.length === 0) {
+    pokemon.style.display = "block";
+  } else if (
+    (tagList.length === 1 && !types.includes(tagList[0])) ||
+    (tagList.length === 2 &&
+      (!types.includes(tagList[0]) || !types.includes(tagList[1])))
+  ) {
+    pokemon.style.display = "none";
+  } else {
+    pokemon.style.display = "block";
+  }
 }
 
 buttonsHeader.forEach((button) =>
   button.addEventListener("click", (event) => {
     const buttonId = event.currentTarget.id;
-    if (tagList.length >= 2) {
+    if (tagList.length >= 2 && buttonId !== "all") {
       alert("You can only choose two tags at a time.");
       return;
     }
 
-    tagList.push(buttonId);
-    pokemonList.innerHTML = "";
-    for (let i = 1; i < start && i <= numPokemon; i++) {
-      fetch(URL + i)
-        .then((response) => response.json())
-        .then((data) => {
-          if (buttonId === "all") {
-            pokemonMonster(data);
-          } else {
-            const types = data.types.map((type) => type.type.name);
-            if (types.includes(buttonId)) {
-              pokemonMonster(data);
-            }
-          }
-        });
+    pokemonCards = document.querySelectorAll(".pokemon");
+    if (buttonId === "all") {
+      tagList.splice(0);
+      tags.innerHTML = "";
+      tags.style.display = "none";
+      pokemonCards.forEach((pokemon) => noneDisplay(pokemon));
+    } else {
+      tags.innerHTML = "Selected tags:";
+      tagList.push(buttonId);
+
+      tagList.map((tag) => {
+        let li = document.createElement("li");
+        li.classList.add("nav-item");
+        tags.appendChild(li);
+        li.innerHTML = `
+          <button id="${tag.toLowerCase()}" class="btn btn-header cancel ${
+          tag != "all" ? tag.toLowerCase() : ""
+        }">${tag}</button>
+        `;
+      });
+
+      cancelButtons = document.querySelectorAll(".cancel");
+      cancelTag(cancelButtons);
+      tags.style.display = "flex";
+
+      pokemonCards.forEach((pokemon) => noneDisplay(pokemon));
     }
   })
 );
@@ -88,5 +117,41 @@ buttonShowMore.addEventListener("click", () => {
     buttonShowMore.textContent = "You have reached the end of the list";
   }
 });
+
+function cancelTag(cancelButtons) {
+  cancelButtons.forEach((cancel) =>
+    cancel.addEventListener("click", (event) => {
+      if (tagList.length === 1) {
+        tagList.splice(0);
+        tags.innerHTML = "";
+        tags.style.display = "none";
+        pokemonCards.forEach((pokemon) => noneDisplay(pokemon));
+      } else {
+        const buttonId = event.currentTarget.id;
+        if (tagList[0] === buttonId) {
+          tagList.shift();
+        } else {
+          tagList.pop();
+        }
+        tags.innerHTML = "Selected tags:";
+
+        tagList.map((tag) => {
+          let li = document.createElement("li");
+          li.classList.add("nav-item");
+          tags.appendChild(li);
+          li.innerHTML = `
+          <button id="${tag.toLowerCase()}" class="btn btn-header cancel ${
+            tag != "all" ? tag.toLowerCase() : ""
+          }">${tag}</button>
+        `;
+        });
+
+        cancelButtons = document.querySelectorAll(".cancel");
+        cancelTag(cancelButtons);
+        pokemonCards.forEach((pokemon) => noneDisplay(pokemon));
+      }
+    })
+  );
+}
 
 getData(start, start + 100);
