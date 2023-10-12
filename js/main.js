@@ -77,6 +77,7 @@ function display(pokemon) {
 buttonsHeader.forEach((button) =>
   button.addEventListener("click", (event) => {
     const buttonId = event.currentTarget.id; //id of the selected button
+    event.currentTarget.disabled = true; //Disabling the button so that it cannot be picked twice
 
     //A pokemon cannot have more than two types
     if (tagList.length >= 2 && buttonId !== "all") {
@@ -130,6 +131,9 @@ function cancelTag(cancelButtons) {
   //Put the event listener in a function because "cancelButtons" element changes
   cancelButtons.forEach((cancel) =>
     cancel.addEventListener("click", (event) => {
+      const buttonId = event.currentTarget.id; //id of the button clicked
+      document.querySelector(`#${buttonId}`).disabled = false; //Enabling the diabled button
+
       if (tagList.length === 1) {
         //Remove the selected tags and show all cards
         tagList.splice(0);
@@ -137,7 +141,6 @@ function cancelTag(cancelButtons) {
         tags.style.display = "none";
         pokemonCards.forEach((pokemon) => display(pokemon));
       } else if (tagList.length === 2) {
-        const buttonId = event.currentTarget.id; //id of the button clicked
         if (tagList[0] === buttonId) {
           tagList.shift(); //Remove first tag
         } else {
